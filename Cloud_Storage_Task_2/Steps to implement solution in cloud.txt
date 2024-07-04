@@ -1,0 +1,44 @@
+___________________STEPS TO IMPLEMENT CLOUD-BASED AWS STORAGE SYSTEM______________________
+
+CONFIGURE EC2
+--Launch a t2.micro(free tier eligible) or any other instance of your choice with a Linux AMI
+--Add SSH, HTTP and custom TCP(port 5000) protocols in the security group
+--Connect to the instance through SSH and run the following commands:
+    sudo yum install python3 -y
+    sudo yum install puthon3-pip -y
+    pip install boto3, flask, flask-cors
+    sudo yum install httpd
+
+CONFIGURE S3
+--Create a new general-purpose buckets with default settings
+
+CONFIGURE IAM
+--Create a new user without console access (give programmatic access)
+--Attach to it a policy 'AmazonS3FullAccess'
+--After creating it, generate an Access Key which will give you public and private key to connect your website with S3
+
+CONFIGURE WEBSITE
+--Download the web files on your local machine
+--On your local machine, open powershell and run the following command to copy web file from your local machine to the aws instance
+    scp -o StrictHostKeyChecking=no -i .\path_to_pem_key\key.pem '.\path to web files\*' ec2-user@{IPv4 address or DNS of instance}:
+--This command will copy files to the home directory of your ec2-user on AWS instance
+--On your AWS instance, Move script.js, styles.css and index.html to /var/www/html/
+--Use following command to edit script.js file and add the IPv4 Public address of your AWS instance in the variable 'host_IP'
+    sudo nano /var/www/html/script.js
+--Now start the httpd service using following commands
+    sudo systemctl start httpd
+    sudo systemctl enable httpd
+--Now in your home folder, edit the app.py file with nano editor with the following command
+    sudo nano app.py
+--Set up S3_BUCKET, S3_KEY, S3_SECRET and S3_REGION with your data
+--Now start the flask service with following command
+    python3 app.py
+--Now flask server should start and you are all setup
+
+RUN WEBSITE
+--Put IPv4 Public IP of your instance in the web browser to access the website
+--Here you can upload, downlaod and delete files
+
+NOTE
+--This is a small project, giving its access to someone else can greatly harm your account as he can upload large files on your bucket
+--Stopping and restarting the instance will change your IPv4 public IP and you will have to change IP in script.js file.
