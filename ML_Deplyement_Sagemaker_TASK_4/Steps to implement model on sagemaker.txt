@@ -1,0 +1,11 @@
+___________________Steps to Implement Model on AWS Sagemaker_____________________
+
+CONFIGURE SAGEMAKER
+--Create notebook instance
+--A role will be created automatically.
+--Go to the instance setting and click on the role, make sure to add AWSs3fullaccess policy to the role
+
+RUN NOTEBOOK
+--Launch the Notebook by clicking on 'Open Jupyter' in the instance dashboard
+--Upload the given notebook: 'Bank_Purchase_Preedictions'
+--Run the cell one-by-one. Make sure to change the region and instance types according to your requirements
