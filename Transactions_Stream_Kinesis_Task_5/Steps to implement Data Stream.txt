@@ -1,0 +1,24 @@
+_____________________Steps to Implement Data Stream_______________________
+
+CONFIGURE KINESIS
+--Create a kinesis data stream with default settings
+
+CONFIGURE S3
+--Create an S3 bucket with default settings
+
+CONFIGURE IAM
+--Create a new role and assign it following policies:
+    AWSLambdaKinesisExecutionRole
+    AWSLambdaBasicExecutionRole
+    AmazonS3FullAccess
+--Create a new user or use an existing user to generate accessKeys
+
+CONFIGURE LAMBDA
+--Create a lambda function with the custom role attached to it
+--Upload the code from given lambda.py file and replace your bucket name in the file
+--Add a trigger for this lambda function with source kinesis and select your data stream
+
+CONGIGURE LOCAL
+--Use generated accessKeys to configure local environment by using the command 'awsb configure'
+--Set the stream_name variable in transaction_simulations.py to your stream name
+--Run the transaction_simulations.py with Python.
