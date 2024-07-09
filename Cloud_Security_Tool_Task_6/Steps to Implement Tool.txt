@@ -1,0 +1,47 @@
+______________________Steps to Implement Security Tool_______________________
+
+CONFIGURE CLOUDTRAIL
+--Create a new Trail in the CloudTrail with following settings
+    Create a new S3 bucket or use existing
+    Uncheck "Log file SSE-KMS encryption" option 
+    Enable the "CloudWatch Logs" Option by checking it
+    Select default or appropriate Log group name and Role name
+    Click Next
+    Select Management Events only with write-only option selected
+    Create the rest with default settings
+
+CONFIGURE CLOUDWATCH
+--Go to the logs created by cloud trail and click on "Metric filters" Tab
+--Create the following 4 new metric filters for these logs
+    Pupose: EC2 Instance Launch or Termination 
+    Filter_query: { ($.eventName = RunInstances) || ($.eventName = TerminateInstances) }
+
+    Pupose: Root user login 
+    Filter_query: { ($.userIdentity.type = "Root") && ($.userIdentity.invokedBy NOT EXISTS) && ($.eventName = "ConsoleLogin") && ($.errorMessage = "Success") }
+
+    Pupose: Policy creation or attachment to role 
+    Filter_query: { ($.eventName = CreatePolicy) || ($.eventName = AttachRolePolicy) || ($.eventName = AttachUserPolicy) || ($.eventName = AttachGroupPolicy) }
+
+    Pupose: S3 Bucket creation or deletion 
+    Filter_query: { ($.eventName = CreateBucket) || ($.eventName = DeleteBucket) }
+--Creating these matrices under one namespace woulf be good
+--Now, go to the log group created by CloudTrail and click on "Metric filter" Tab
+--By selecting the metrics one-by-one, create alarm for each of them with following settings
+    Select "Sum" statistics
+    Select 1 or 5 minute period
+    Threshold Type: Static
+    Select Greater/Equal >= threshold
+    threshold value: 1
+    In additional configuration, Treat missing data as good
+    Click Next and select In Alarm and a SNS topic for notification and setup an email (for first one, use existing one for rest)
+    On the next tab, select name and description and create the alarm.
+--Now create an extra alarm for any lambda function that can simply throw errors.
+    Create alarm by going to "All alarms" tab under Alarms section of CloudWatch
+    Select a metric from the cloudwatch default lambda matrix made for errors
+    if you don't have a lambda function, create a new one with this line to throw errors:
+      raise ValueError("This is an error message")
+    After selecting the metric, create the alarm as you did for other metrices but select 3 minutes period with threshold value of 3.
+
+CONFIGURE CLOUDWATCH DASHBOARD
+--Create a new dashboard and add alarm widged by selecting all the 5 alarms from the list.
+
