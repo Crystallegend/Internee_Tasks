@@ -1,0 +1,11 @@
+____________________Steps to Implement Multi-cloud Dashboard______________________
+
+-Download the web_files.zip in your local environment, Extract it.
+-Open config.py and enter your accessKeys and Region from AWS and Linode's API from Linode.
+-AWS IAM user with these accessKeys should have full access to EC2, S3, and Lambda  functions.
+-Linode's API key should have read-write access to Linodes and Object Storages.
+-Make sure you have Object Storage enabled in your Linode account.
+-Install Python and Flask in your environment and run the website on localhost by using the following command
+----python app.py
+
+-while creating lambda functions, you should upload a .zip file containing the python or nodejs code according to runtime, where for the handler feel, the value is: code-file-name.handler-function-in-the-code. For example: lamda_function.lambda_handler or index.handler
