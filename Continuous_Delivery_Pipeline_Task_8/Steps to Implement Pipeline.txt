@@ -1,0 +1,8 @@
+_______________________Steps to implement Piepline_______________________
+
+Setup the given web files in a github repo
+Setup codebuild with source as github
+Setup Elastic bean stalk environment with Nodejs 20
+Setup Code Pipeline with source as github, build as codebuil and Elastic Bean Stalk environment for deployement stage
+Optionally, you can add a review stage between build and deploy stages.
+
