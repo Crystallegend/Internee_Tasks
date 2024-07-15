@@ -1,0 +1,30 @@
+_______________________Steps to Implement the Migration Tool_________________________
+
+CONFIGURE IAM
+--Make a user and give him programmatic access through accessKeys.
+--It should have following polices attached:
+    AWSApplicationMigrationFullAccess
+    AWSApplicationMigrationAgentInstallationPolicy
+    AmazonEC2FullAccess
+--It should have an inline policy with following configuration:
+    {
+    	"Version": "2012-10-17",
+    	"Statement": [
+        	{
+            	"Effect": "Allow",
+            	"Action": "iam:PassRole",
+            	"Resource": "arn:aws:iam::339713024040:role/service-role/AWSApplicationMigrationConversionServerRole"
+        	}
+    	]
+    }
+
+CONFIGURE APPLICATION MIGRATION SERVICE
+--Configure Replication and Launch Templates:
+    Setup instance type to t2.micro or t3.micro for free-tier instances
+    Subnets and Security groups should be configured to allow necessary traffic
+    Keep right-sizing off
+
+CONFIGURE SCRIPT
+--Replace variables in config.py to your values
+--Run migrator.py for setting up the AWS Replication-Agent on local server
+--Run test_and_cutover.py for rest of the process after the initial sync is completed on the source server
